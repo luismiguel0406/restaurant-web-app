@@ -1,45 +1,53 @@
 "use client";
+
+import React, { useState } from "react";
 import {
   Drawer,
   Box,
-  Container,
   AppBar,
   Toolbar,
   IconButton,
   Stack,
 } from "@mui/material";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
-import ProductCard from "./components/ProductCard";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import ProductsList from "./components/ProductsList";
 
-import React, { useState } from "react";
+
+const queryClient = new QueryClient();
 
 const page = () => {
+
   const [open, setOpen] = useState(false);
+  
   const toggleDrawer = (state = false) => {
     setOpen(state);
   };
+
   return (
-    <>
+    <QueryClientProvider client={queryClient}>
       <Drawer anchor="right" open={open} onClose={() => toggleDrawer(false)}>
         <Box sx={{ minWidth: 300, p: 2 }}>Soy el contenido</Box>
       </Drawer>
       <AppBar position="static">
         <Toolbar>
           <Stack
-          direction="row"
-          sx={{
-             justifyContent:"flex-end",
-             alignItems:"center"
-          }} >
-          <IconButton onClick={() => setOpen(!open)}>
-            <ShoppingCartIcon sx={{color:"white"}} fontSize="large"/>
-          </IconButton>
+            direction="row"
+            sx={{
+              justifyContent: "flex-end",
+              alignItems: "center",
+            }}
+          >
+            <IconButton onClick={() => setOpen(!open)}>
+              <ShoppingCartIcon sx={{ color: "white" }} fontSize="large" />
+            </IconButton>
           </Stack>
-      
         </Toolbar>
       </AppBar>
-      <Container sx={{p:2}} maxWidth={false}>Soy el contenido de la pagina</Container>
-    </>
+      <Box sx={{ p: 2 }}>
+        <ProductsList />
+      </Box>
+    </QueryClientProvider>
   );
 };
 
