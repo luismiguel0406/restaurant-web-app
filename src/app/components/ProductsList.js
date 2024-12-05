@@ -7,7 +7,7 @@ const ProductsList = ({}) => {
 
  const { data } = useGetData('products');
   return (
-    <Grid2 container spacing={3}>
+    <Grid2 container spacing={3} sx={{overflow:"hidden"}}>
       {data?.map(item=>(
         <Grid2 size={{sm:2}} key={item.idIngredient}>
           <ProductCard product={item}/>
