@@ -78,7 +78,7 @@ const ProductCard = ({ product }) => {
           <Button 
           onClick={()=>handleItemInCart()}
           variant="contained" 
-          startIcon={<ShoppingCartIcon />}>Add cart</Button>
+          startIcon={<ShoppingCartIcon />}>Add item</Button>
         )}
       </CardActions>
     </Card>
