@@ -13,8 +13,9 @@ import {
 } from "@mui/material";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import ProductsList from "./components/ProductsList";
-import OrderCard from "./components/orderCard";
+import ProductsList from "./components/product/productsList";
+import OrderCard from "./components/order/orderCard";
+import SidebarCart from "./components/cart/sidebarCart";
 
 const queryClient = new QueryClient();
 
@@ -29,7 +30,7 @@ const page = () => {
     <QueryClientProvider client={queryClient}>
       <Box>
         <Drawer anchor="right" open={open} onClose={() => toggleDrawer(false)}>
-          <Box sx={{ minWidth: 300, p: 2 }}>Soy el contenido</Box>
+          <SidebarCart/>
         </Drawer>
         <AppBar position="static">
           <Toolbar>
