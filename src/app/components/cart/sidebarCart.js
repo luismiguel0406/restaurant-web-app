@@ -1,23 +1,22 @@
-import { Box, Button, Grid2, Typography,  } from "@mui/material";
+"use client";
+import { Box, Button, Grid2, Typography } from "@mui/material";
 import EmptyCart from "./emptyCart";
 import MiniCardProduct from "./miniCardProduct";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import PaymentSummary from "./paymentSummary";
 import { socket } from "@/app/socket";
 import { usePostMutation } from "@/app/hooks/usePostData";
 
-
-const SidebarCart = ({toggleDrawer}) => {
-
+const SidebarCart = ({ closeDrawer }) => {
   let items = JSON.parse(localStorage.getItem("cart"));
 
   const [itemsCart, setItemsCart] = useState(items);
-  const mutation = usePostMutation('order');
+  const mutation = usePostMutation("order");
 
   let order = {
     client: socket.id,
-    orderItems: itemsCart
-   };
+    orderItems: itemsCart,
+  };
 
   const handleRemoveFromCart = (idIngredient) => {
     const filteredItems = itemsCart?.filter(
@@ -27,15 +26,17 @@ const SidebarCart = ({toggleDrawer}) => {
     setItemsCart(filteredItems);
   };
 
- const handlePlaceOrder =()=>{
-   mutation.mutate(order);
- };
-
-  if(mutation.isSuccess){
-      localStorage.setItem("order", JSON.stringify(order))
+  const handlePlaceOrder = () => {
+    mutation.mutate(order);
+  };
+  
+  useEffect(() => {
+    if (mutation.isSuccess) {
+      localStorage.setItem("order", JSON.stringify(order));
       localStorage.removeItem("cart");
-      //toggleDrawer();
-  }
+      closeDrawer();
+    }
+  }, [mutation]);
 
   if (itemsCart?.length === 0 || itemsCart === null) return <EmptyCart />;
 
@@ -58,13 +59,13 @@ const SidebarCart = ({toggleDrawer}) => {
       <Box width={"100%"} sx={{ p: 2, height: "25%" }}>
         <PaymentSummary items={items} />
         <Button
-        color="info"
-        sx={{ width: "100%", mt: 3 }}
-        onClick={() =>handlePlaceOrder()}
-        variant="contained"
-      >
-        <Typography>Place order</Typography>
-      </Button>
+          color="info"
+          sx={{ width: "100%", mt: 3 }}
+          onClick={handlePlaceOrder}
+          variant="contained"
+        >
+          <Typography>Place order</Typography>
+        </Button>
       </Box>
     </Box>
   );

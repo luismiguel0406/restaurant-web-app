@@ -10,47 +10,57 @@ import {
   Stack,
   Grid2,
   Paper,
+  Button,
 } from "@mui/material";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import OnlinePredictionIcon from "@mui/icons-material/OnlinePrediction";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import ProductsList from "./components/product/productsList";
 import SidebarCart from "./components/cart/sidebarCart";
 import { socket } from "./socket";
-import { ToastContainer } from 'react-toastify';
+import { ToastContainer } from "react-toastify";
 import OrderStatus from "./components/order/orderStatus";
-
 
 const queryClient = new QueryClient();
 
 const page = () => {
   const [open, setOpen] = useState(false);
-  const [newOrderStatus, setNewOrderStatus]= useState()
+  const [newOrderStatus, setNewOrderStatus] = useState();
+  const [sockeLabel, setSocketLabel] = useState("Disconnect socket");
 
-  useEffect(()=>{
-   if(socket.connected){
-       console.log(`connected: ${socket.id}`);
-   }
-   return ()=>{
-    socket.disconnect();
-   }
-  },[]);
+  useEffect(() => {
+    if (socket.connected) {
+      console.log(`connected: ${socket.id}`);
+    }
 
-  const toggleDrawer = (state = false) => {
-    setOpen(state);
+    return () => {
+      socket.disconnect();
+    };
+  }, []);
+
+  const closeDrawer = () => {
+    setOpen(false);
   };
 
-  socket.on("status-order",(args)=>{
+  socket.on("status-order", (args) => {
     setNewOrderStatus(args);
-  })
-  /*const handleNewOrderPlaced = (order)=>{
-    setNewOrder(order);
-  };*/
+  });
+
+  const handleToggleSocketConnection = () => {
+    if (socket.connected) {
+      socket.disconnect();
+      setSocketLabel("Connect socket");
+    } else if (socket.disconnected) {
+      socket.connect();
+      setSocketLabel("Disconnect socket");
+    }
+  };
 
   return (
     <QueryClientProvider client={queryClient}>
       <Box>
-        <Drawer anchor="right" open={open} onClose={() => toggleDrawer(false)}>
-          <SidebarCart toggleDrawer={toggleDrawer}/>
+        <Drawer anchor="right" open={open} onClose={() => closeDrawer()}>
+          <SidebarCart closeDrawer={closeDrawer} />
         </Drawer>
         <AppBar position="static">
           <Toolbar>
@@ -64,20 +74,29 @@ const page = () => {
               <IconButton onClick={() => setOpen(!open)}>
                 <ShoppingCartIcon sx={{ color: "white" }} fontSize="large" />
               </IconButton>
+              <Button
+                sx={{ ml: 5 }}
+                variant="outlined"
+                color="white"
+                onClick={() => handleToggleSocketConnection()}
+                startIcon={<OnlinePredictionIcon />}
+              >
+                {sockeLabel}
+              </Button>
             </Stack>
           </Toolbar>
         </AppBar>
 
-        <Grid2 container spacing={3} sx={{ p: 2, mt:1, height:100 }}>
-          <OrderStatus order={newOrderStatus}/>
+        <Grid2 container spacing={3} sx={{ p: 2, mt: 1, height: 100 }}>
+          <OrderStatus order={newOrderStatus} />
         </Grid2>
 
         <Suspense fallback={<h1>Loading...</h1>}>
-          <Paper  sx={{ p: 2, maxHeight: "100vh", overflow: "auto" }}>
+          <Paper sx={{ p: 2, maxHeight: "100vh", overflow: "auto" }}>
             <ProductsList />
           </Paper>
         </Suspense>
-        <ToastContainer/>
+        <ToastContainer />
       </Box>
     </QueryClientProvider>
   );
