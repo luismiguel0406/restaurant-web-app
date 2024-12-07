@@ -1,22 +1,43 @@
-import { Box, Button, Divider, Grid2, Typography } from "@mui/material";
+import { Box, Button, Grid2, Typography,  } from "@mui/material";
 import EmptyCart from "./emptyCart";
 import MiniCardProduct from "./miniCardProduct";
 import { useState } from "react";
 import PaymentSummary from "./paymentSummary";
+import { socket } from "@/app/socket";
+import { usePostMutation } from "@/app/hooks/usePostData";
 
-const SidebarCart = () => {
+
+const SidebarCart = ({toggleDrawer}) => {
+
   let items = JSON.parse(localStorage.getItem("cart"));
+
   const [itemsCart, setItemsCart] = useState(items);
+  const mutation = usePostMutation('order');
+
+  let order = {
+    client: socket.id,
+    orderItems: itemsCart
+   };
 
   const handleRemoveFromCart = (idIngredient) => {
-    const filteredItems = items.filter(
+    const filteredItems = itemsCart?.filter(
       (item) => item.idIngredient !== idIngredient
     );
     localStorage.setItem("cart", JSON.stringify(filteredItems));
     setItemsCart(filteredItems);
   };
 
-  if (!itemsCart) return <EmptyCart />;
+ const handlePlaceOrder =()=>{
+   mutation.mutate(order);
+ };
+
+  if(mutation.isSuccess){
+      localStorage.setItem("order", JSON.stringify(order))
+      localStorage.removeItem("cart");
+      //toggleDrawer();
+  }
+
+  if (itemsCart?.length === 0 || itemsCart === null) return <EmptyCart />;
 
   return (
     <Box width={350} height={"100vh"}>
@@ -36,6 +57,14 @@ const SidebarCart = () => {
       </Grid2>
       <Box width={"100%"} sx={{ p: 2, height: "25%" }}>
         <PaymentSummary items={items} />
+        <Button
+        color="info"
+        sx={{ width: "100%", mt: 3 }}
+        onClick={() =>handlePlaceOrder()}
+        variant="contained"
+      >
+        <Typography>Place order</Typography>
+      </Button>
       </Box>
     </Box>
   );

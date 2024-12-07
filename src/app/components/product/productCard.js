@@ -57,7 +57,7 @@ const ProductCard = ({ product }) => {
         sx={{ height: 140 }}
       />
       <CardContent>
-        <Typography variant="h5" component="div">
+        <Typography variant="h6" component="div">
           {product.strIngredient}
         </Typography>
         <Typography variant="h6">$ {product.price}</Typography>
@@ -68,7 +68,7 @@ const ProductCard = ({ product }) => {
             <IconButton onClick={() => handleRemoveItem()}>
               <RemoveIcon />
             </IconButton>
-            <Typography variant="h5">{counter}</Typography>
+            <Typography variant="h6">{counter}</Typography>
             <IconButton onClick={() => handleAddItem()}>
               <AddIcon />
             </IconButton>

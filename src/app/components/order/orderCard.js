@@ -1,26 +1,30 @@
-import {
-    Card,
-    CardContent,
-    Typography,
-  } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 
-  
-  const OrderCard = ({order}) => {
-  
-    return (
-      <Card variant="outlined">
-        <CardContent>
-          <Typography variant="h5" component="div" align="left">
-           #Order No.
-          </Typography>
-          <Typography variant="h5" component="div" align="right">
-           items qty
-          </Typography>
-          <Typography variant="h5">{order?.status}</Typography>
-        </CardContent>
-      </Card>
-    );
-  };
-  
-  export default OrderCard;
-  
+const OrderCard = ({ order }) => {
+  return (
+    <Box
+      sx={{
+        height: "100%"
+      }}
+    >
+      <Typography component={"p"} variant="h6" position="center" sx={{ mr: 1 }}>
+        Order: {order?.client}
+      </Typography>
+      <Box sx={{ display: "flex" }}>
+        <Typography component={"p"} variant="h6" sx={{ mr: 1 }}>
+          Status:
+        </Typography>
+        <Typography
+          component={"p"}
+          variant="h6"
+          position="center"
+          color={order?.status?.color}
+        >
+          {order?.status?.name}
+        </Typography>
+      </Box>
+    </Box>
+  );
+};
+
+export default OrderCard;
