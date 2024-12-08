@@ -4,17 +4,16 @@ import EmptyCart from "./emptyCart";
 import MiniCardProduct from "./miniCardProduct";
 import { useEffect, useState } from "react";
 import PaymentSummary from "./paymentSummary";
-import { socket } from "@/app/socket";
 import { usePostMutation } from "@/app/hooks/usePostData";
 
-const SidebarCart = ({ closeDrawer }) => {
+const SidebarCart = ({ closeDrawer, clientId }) => {
   let items = JSON.parse(localStorage.getItem("cart"));
 
   const [itemsCart, setItemsCart] = useState(items);
   const mutation = usePostMutation("order");
 
   let order = {
-    client: socket.id,
+    client: clientId,
     orderItems: itemsCart,
   };
 

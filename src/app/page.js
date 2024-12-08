@@ -60,7 +60,7 @@ const page = () => {
     <QueryClientProvider client={queryClient}>
       <Box>
         <Drawer anchor="right" open={open} onClose={() => closeDrawer()}>
-          <SidebarCart closeDrawer={closeDrawer} />
+          <SidebarCart closeDrawer={closeDrawer} clientId={id} />
         </Drawer>
         <AppBar position="static">
           <Toolbar>

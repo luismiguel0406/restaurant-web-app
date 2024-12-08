@@ -2,10 +2,14 @@ import React from 'react'
 import ProductCard from './productCard'
 import { useGetData } from '../../hooks/useGetData'
 import { Grid2 } from '@mui/material'
+import EmptyProductList from './emptyProductList'
 
 const ProductsList = ({}) => {
 
  const { data } = useGetData('products');
+
+ if(!data) return <EmptyProductList/>
+ 
   return (
     <Grid2 container spacing={3} sx={{overflow:"hidden", backgroundColor: "#CFE2FF"}}>
       {data?.map(item=>(
