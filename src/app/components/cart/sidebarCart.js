@@ -6,17 +6,22 @@ import { useEffect, useState } from "react";
 import PaymentSummary from "./paymentSummary";
 import { usePostMutation } from "@/app/hooks/usePostData";
 
-const SidebarCart = ({ closeDrawer, clientId }) => {
+const SidebarCart = ({ closeDrawer, clientId, socketId }) => {
   let items = JSON.parse(localStorage.getItem("cart"));
 
   const [itemsCart, setItemsCart] = useState(items);
   const mutation = usePostMutation("order");
 
   let order = {
-    client: clientId,
+    clientId,
+    socketId,
     orderItems: itemsCart,
   };
 
+  const handlePlaceOrder = () => {
+    mutation.mutate(order);
+  };
+  
   const handleRemoveFromCart = (idIngredient) => {
     const filteredItems = itemsCart?.filter(
       (item) => item.idIngredient !== idIngredient
@@ -25,10 +30,6 @@ const SidebarCart = ({ closeDrawer, clientId }) => {
     setItemsCart(filteredItems);
   };
 
-  const handlePlaceOrder = () => {
-    mutation.mutate(order);
-  };
-  
   useEffect(() => {
     if (mutation.isSuccess) {
       localStorage.setItem("order", JSON.stringify(order));

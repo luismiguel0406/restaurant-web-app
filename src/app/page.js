@@ -27,6 +27,8 @@ const page = () => {
   const [open, setOpen] = useState(false);
   const [newOrderStatus, setNewOrderStatus] = useState();
   const [sockeLabel, setSocketLabel] = useState("Disconnect socket");
+  const [clientId, setClientId] = useState(localStorage.getItem("clientId") || '')
+
 
   useEffect(() => {
     if (socket.connected) {
@@ -42,9 +44,21 @@ const page = () => {
     setOpen(false);
   };
 
+  /*Socket registration and listen status order */
+  socket.on("connect",()=>{
+    console.log("connected");
+    socket.emit("register", clientId)
+  })
+
+  socket.on("register_successfully",(generatedClientId)=>{
+    localStorage.setItem("clientId", generatedClientId);
+    setClientId(generatedClientId);
+  })
+
   socket.on("status-order", (args) => {
     setNewOrderStatus(args);
   });
+/*************************************************** */
 
   const handleToggleSocketConnection = () => {
     if (socket.connected) {
@@ -60,7 +74,7 @@ const page = () => {
     <QueryClientProvider client={queryClient}>
       <Box>
         <Drawer anchor="right" open={open} onClose={() => closeDrawer()}>
-          <SidebarCart closeDrawer={closeDrawer} clientId={id} />
+          <SidebarCart closeDrawer={closeDrawer} clientId={clientId} socketId={socket?.id} />
         </Drawer>
         <AppBar position="static">
           <Toolbar>
