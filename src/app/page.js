@@ -23,27 +23,27 @@ import OrderStatus from "./components/order/orderStatus";
 const queryClient = new QueryClient();
 
 const page = () => {
-
+  const CLIENT_ID =  "MyIdGenerico";
   const [open, setOpen] = useState(false);
   const [newOrderStatus, setNewOrderStatus] = useState();
   const [sockeLabel, setSocketLabel] = useState("Disconnect socket");
-  const [clientId, setClientId] = useState("");
 
 
   useEffect(() => {
+
+    socket.connect();
     if (socket.connected) {
       console.log(`connected: ${socket.id}`);
     }
 
     /*Socket registration and listen status order */
-    socket.on("connect", () => {
-      let client_id = sessionStorage.getItem("clientId") || "";
-      socket.emit("register", client_id);
+    socket.on("connect", async () => {     
+      socket.emit("register", CLIENT_ID);
     });
 
+    //If we don't have Id
     socket.on("register_successfully", (generatedClientId) => {
       sessionStorage.setItem("clientId", generatedClientId);
-      setClientId(generatedClientId);
     });
 
     socket.on("status-order", (args) => {
@@ -55,15 +55,9 @@ const page = () => {
     };
   }, []);
 
-  useEffect(()=>{
-    let client_id = sessionStorage.getItem("clientId") || "";
-      setClientId(client_id);
-  },[]);
-
   const closeDrawer = () => {
     setOpen(false);
   };
-
 
   const handleToggleSocketConnection = () => {
     if (socket.connected) {
@@ -79,7 +73,7 @@ const page = () => {
     <QueryClientProvider client={queryClient}>
       <Box>
         <Drawer anchor="right" open={open} onClose={() => closeDrawer()}>
-          <SidebarCart closeDrawer={closeDrawer} clientId={clientId} socketId={socket?.id} />
+          <SidebarCart closeDrawer={closeDrawer} clientId={CLIENT_ID} socketId={socket?.id} />
         </Drawer>
         <AppBar position="static">
           <Toolbar>
