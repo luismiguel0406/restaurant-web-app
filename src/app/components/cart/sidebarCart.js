@@ -45,7 +45,7 @@ const SidebarCart = ({ closeDrawer, clientId, socketId }) => {
       <Grid2
         container
         spacing={2}
-        sx={{ overflow: "auto", p: 2, width: "100%", maxHeight: "75%" }}
+        sx={{ overflow: "auto", p: 2, width: "100%", height: "75%" }}
       >
         {itemsCart?.map((item) => (
           <Grid2 size={{ xs: 12 }} sx={{ height: 85 }} key={item.idIngredient}>
@@ -56,6 +56,7 @@ const SidebarCart = ({ closeDrawer, clientId, socketId }) => {
           </Grid2>
         ))}
       </Grid2>
+      
       <Box width={"100%"} sx={{ p: 2, height: "25%" }}>
         <PaymentSummary items={items} />
         <Button
