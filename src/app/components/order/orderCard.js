@@ -8,7 +8,7 @@ const OrderCard = ({ order }) => {
       }}
     >
       <Typography component={"p"} variant="h6" position="center" sx={{ mr: 1 }}>
-        Order: {order?.client}
+        Order: {order?.clientId}
       </Typography>
       <Box sx={{ display: "flex" }}>
         <Typography component={"p"} variant="h6" sx={{ mr: 1 }}>

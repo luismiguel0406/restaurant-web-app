@@ -1,5 +1,4 @@
 "use client";
-
 import React, { Suspense, useEffect, useState } from "react";
 import {
   Drawer,
@@ -24,10 +23,11 @@ import OrderStatus from "./components/order/orderStatus";
 const queryClient = new QueryClient();
 
 const page = () => {
+
   const [open, setOpen] = useState(false);
   const [newOrderStatus, setNewOrderStatus] = useState();
   const [sockeLabel, setSocketLabel] = useState("Disconnect socket");
-  const [clientId, setClientId] = useState(localStorage.getItem("clientId") || '')
+  const [clientId, setClientId] = useState();
 
 
   useEffect(() => {
@@ -35,30 +35,34 @@ const page = () => {
       console.log(`connected: ${socket.id}`);
     }
 
+    /*Socket registration and listen status order */
+    socket.on("connect", () => {
+      socket.emit("register", clientId);
+    });
+
+    socket.on("register_successfully", (generatedClientId) => {
+      localStorage.setItem("clientId", generatedClientId);
+      setClientId(generatedClientId);
+    });
+
+    socket.on("status-order", (args) => {
+      setNewOrderStatus(args);
+    });
+    /*************************************************** */
     return () => {
       socket.disconnect();
     };
   }, []);
 
+  useEffect(()=>{
+    let client_id = localStorage.getItem("clientId") || "";
+      setClientId(client_id);
+  },[]);
+
   const closeDrawer = () => {
     setOpen(false);
   };
 
-  /*Socket registration and listen status order */
-  socket.on("connect",()=>{
-    console.log("connected");
-    socket.emit("register", clientId)
-  })
-
-  socket.on("register_successfully",(generatedClientId)=>{
-    localStorage.setItem("clientId", generatedClientId);
-    setClientId(generatedClientId);
-  })
-
-  socket.on("status-order", (args) => {
-    setNewOrderStatus(args);
-  });
-/*************************************************** */
 
   const handleToggleSocketConnection = () => {
     if (socket.connected) {
