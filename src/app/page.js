@@ -27,7 +27,7 @@ const page = () => {
   const [open, setOpen] = useState(false);
   const [newOrderStatus, setNewOrderStatus] = useState();
   const [sockeLabel, setSocketLabel] = useState("Disconnect socket");
-  const [clientId, setClientId] = useState();
+  const [clientId, setClientId] = useState("");
 
 
   useEffect(() => {
@@ -37,7 +37,8 @@ const page = () => {
 
     /*Socket registration and listen status order */
     socket.on("connect", () => {
-      socket.emit("register", clientId);
+      let client_id = sessionStorage.getItem("clientId") || "";
+      socket.emit("register", client_id);
     });
 
     socket.on("register_successfully", (generatedClientId) => {
