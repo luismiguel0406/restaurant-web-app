@@ -41,7 +41,7 @@ const page = () => {
     });
 
     socket.on("register_successfully", (generatedClientId) => {
-      localStorage.setItem("clientId", generatedClientId);
+      sessionStorage.setItem("clientId", generatedClientId);
       setClientId(generatedClientId);
     });
 
@@ -55,7 +55,7 @@ const page = () => {
   }, []);
 
   useEffect(()=>{
-    let client_id = localStorage.getItem("clientId") || "";
+    let client_id = sessionStorage.getItem("clientId") || "";
       setClientId(client_id);
   },[]);
 
