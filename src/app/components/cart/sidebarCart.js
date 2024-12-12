@@ -5,9 +5,10 @@ import MiniCardProduct from "./miniCardProduct";
 import { useEffect, useState } from "react";
 import PaymentSummary from "./paymentSummary";
 import { usePostMutation } from "@/app/hooks/usePostData";
+import { getLocalStorageCart } from "@/app/helpers";
 
 const SidebarCart = ({ closeDrawer, clientId, socketId }) => {
-  let items = JSON.parse(localStorage.getItem("cart"));
+  let items = getLocalStorageCart();
 
   const [itemsCart, setItemsCart] = useState(items);
   const mutation = usePostMutation("order");

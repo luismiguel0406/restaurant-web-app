@@ -6,9 +6,9 @@ const PaymentSummary = ({ items }) => {
   const payment = items?.reduce(
     (accumulator, currentValue) => {
       return {
-        price: accumulator.price + currentValue.price,
+        price: accumulator.total + currentValue.total,
         delivery: deliveryFee,
-        total: accumulator.price + currentValue.price + deliveryFee,
+        total: accumulator.total + currentValue.total + deliveryFee,
       };
     },
     { price: 0, delivery: 0, total: 0 }
